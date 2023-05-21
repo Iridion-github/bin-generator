@@ -16,16 +16,13 @@ function App() {
 
   const getColorClass = (letter: string): string => {
     switch (letter) {
-      case 'A': return 'red-bin';
-      case 'B': return 'blue-bin';
-      case 'C': return 'green-bin';
-      case 'D': return 'orange-bin';
-      case 'E': return 'grey-bin';
-      case 'F': return 'purple-bin';
-      default: return 'white-bin';
+      case 'UNKNOW1': return 'azure-bin';
+      case 'UNKNOW2': return 'grey-bin';
+      case 'B': return 'purple-bin';
+      case 'C': return 'yellow-bin';
+      default: return 'grey-bin';
     }
   };
-
 
   const handleChange = (event: any) => {
     setBinText(event.target.value);

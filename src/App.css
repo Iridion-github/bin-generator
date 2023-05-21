@@ -51,20 +51,12 @@
   margin-right: 10px;
 }
 
-.red-bin {
-  background-color: red;
+.yellow-bin {
+  background-color: yellow;
 }
 
-.blue-bin {
-  background-color: blue
-}
-
-.green-bin {
-  background-color: green;
-}
-
-.orange-bin {
-  background-color: orange;
+.azure-bin {
+  background-color: rgb(17, 117, 184)
 }
 
 .grey-bin {
@@ -73,8 +65,4 @@
 
 .purple-bin {
   background-color: purple;
-}
-
-white-bin {
-  background-color: white;
 }
