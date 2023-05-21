@@ -60,7 +60,7 @@ function App() {
   const generateBinsFromData = () => {
     return binsData.map(elem => {
       return (
-        <div id={elem.id} className="bin-row">
+        <div id={elem.id} key={elem.id + ' ' + elem.code} className="bin-row">
           <div className={elem.classes}>
             <QRCode size={100} value={elem.code} />
             <div className='bin-text'> {elem.code}  </div>
