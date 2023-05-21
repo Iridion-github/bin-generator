@@ -49,6 +49,7 @@ function App() {
     };
     const binsDataUpdated = [...binsData, newBin];
     setBinsData(binsDataUpdated);
+    setBinText('');
   };
 
 
