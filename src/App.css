@@ -58,6 +58,14 @@
   margin-right: 10px;
 }
 
+.green-bin {
+  background-color: rgb(64, 255, 47);
+}
+
+.purple-bin {
+  background-color: purple;
+}
+
 .yellow-bin {
   background-color: yellow;
 }
@@ -70,6 +78,6 @@
   background-color: grey;
 }
 
-.purple-bin {
-  background-color: purple;
+.grey-bin {
+  background-color: red;
 }

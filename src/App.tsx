@@ -19,11 +19,14 @@ function App() {
   const [binsData, setBinsData] = useState<BinInterface[]>([]);
 
   const getColorClass = (letter: string): string => {
-    switch (letter) {
-      case 'UNKNOW1': return 'azure-bin';
-      case 'UNKNOW2': return 'grey-bin';
+    const upperCasedLetter = letter.toUpperCase();
+    switch (upperCasedLetter) {
+      case 'A': return 'green-bin';
       case 'B': return 'purple-bin';
       case 'C': return 'yellow-bin';
+      case 'D': return 'azure-bin';
+      case 'E': return 'grey-bin';
+      case 'F': return 'red-bin';
       default: return 'grey-bin';
     }
   };
@@ -38,13 +41,14 @@ function App() {
   };
 
   const handleSubmit = () => {
-    const targetLetter = binText[binText.length - 4];
+    const uppercasedCode = binText.toUpperCase();
+    const targetLetter = uppercasedCode[uppercasedCode.length - 4];
     const colorClass = getColorClass(targetLetter);
     const binClasses = 'bin-container ' + colorClass;
     const binId = Date.now().toString();
     const newBin: BinInterface = {
       id: binId,
-      code: binText,
+      code: uppercasedCode,
       classes: binClasses,
     };
     const binsDataUpdated = [...binsData, newBin];
