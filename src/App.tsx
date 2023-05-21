@@ -8,11 +8,15 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 
 
-
+export interface BinInterface {
+  id: string;
+  code: string;
+  classes: string;
+}
 
 function App() {
-  const [hasGenerated, setHasGenerated] = useState(false);
   const [binText, setBinText] = useState('P-1-F-413B283');
+  const [binsData, setBinsData] = useState<BinInterface[]>([]);
 
   const getColorClass = (letter: string): string => {
     switch (letter) {
@@ -28,22 +32,39 @@ function App() {
     setBinText(event.target.value);
   };
 
-  const handleSubmit = () => {
-    console.log('submitted this value:', binText);
-    setHasGenerated(true);
+  const deleteBin = (id: string) => {
+    const binsDataUpdated = binsData.filter(elem => elem.id !== id);
+    setBinsData(binsDataUpdated);
   };
 
-  const generateBinFragment = () => {
+  const handleSubmit = () => {
     const targetLetter = binText[binText.length - 4];
     const colorClass = getColorClass(targetLetter);
-    const classes = 'bin-container ' + colorClass;
-    return (
-      <div className={classes}>
-        <QRCode value={binText} />
-        <div className='bin-text'> {binText}  </div>
-        <QRCode value={binText} />
-      </div>
-    );
+    const binClasses = 'bin-container ' + colorClass;
+    const binId = Date.now().toString();
+    const newBin: BinInterface = {
+      id: binId,
+      code: binText,
+      classes: binClasses,
+    };
+    const binsDataUpdated = [...binsData, newBin];
+    setBinsData(binsDataUpdated);
+  };
+
+
+  const generateBinsFromData = () => {
+    return binsData.map(elem => {
+      return (
+        <div id={elem.id} className="bin-row">
+          <div className={elem.classes}>
+            <QRCode size={100} value={elem.code} />
+            <div className='bin-text'> {elem.code}  </div>
+            <QRCode size={100} value={elem.code} />
+          </div>
+          <Button size='lg' variant='danger' onClick={() => deleteBin(elem.id)}> Elimina </Button>
+        </div>
+      );
+    });
   };
 
   return (
@@ -60,9 +81,9 @@ function App() {
               aria-describedby="codice"
             />
           </InputGroup>
-          <Button onClick={handleSubmit}> Genera </Button>
+          <Button size='lg' onClick={handleSubmit}> Genera </Button>
         </div>
-        {hasGenerated && generateBinFragment()}
+        {generateBinsFromData()}
       </div>
     </div>
   );

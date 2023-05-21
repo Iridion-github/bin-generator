@@ -7,6 +7,7 @@
 }
 
 .outer-container {
+  background-color: white;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -16,14 +17,12 @@
   padding: 20px 40px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+.bin-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
 }
 
 .bin-container {
@@ -31,12 +30,20 @@
   justify-content: space-between;
   align-items: center;
   color: black;
-  padding: 16px;
-  width: 1200px;
+  padding: 12px;
+  margin-right: 5px;
+  width: 600px;
+}
+
+.delete-btn-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
 }
 
 .bin-text {
-  font-size: 80px;
+  font-size: 44px;
   font-weight: 700;
 }
 
