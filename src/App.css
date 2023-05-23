@@ -59,25 +59,25 @@
 }
 
 .green-bin {
-  background-color: rgb(64, 255, 47);
+  background-color: #00b050;
 }
 
 .purple-bin {
-  background-color: purple;
+  background-color: #7030a0;
 }
 
 .yellow-bin {
-  background-color: yellow;
+  background-color: #ffff00;
 }
 
 .azure-bin {
-  background-color: rgb(17, 117, 184)
+  background-color: #00b0f0
 }
 
 .grey-bin {
-  background-color: grey;
+  background-color: #a5a5a5;
 }
 
 .red-bin {
-  background-color: red;
+  background-color: #c00000;
 }
