@@ -25,7 +25,7 @@ function App() {
   };
 
   const getColorClass = (letter: string): string => {
-    const upperCasedLetter = letter.toUpperCase();
+    const upperCasedLetter = letter?.toUpperCase() ?? 'A';
     switch (upperCasedLetter) {
       case 'A': return 'green-bin';
       case 'B': return 'purple-bin';
@@ -56,7 +56,7 @@ function App() {
 
   const handleSubmit = () => {
     if (!binText?.length) return;
-    const uppercasedCode = binText.toUpperCase();
+    const uppercasedCode = binText?.toUpperCase() ?? 'A';
     let codeFragments: string[] = [];
     // Check for "space + alphanumeric"
     if (/\s+[A-Z0-9]/.test(uppercasedCode)) {
