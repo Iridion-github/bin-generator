@@ -17,12 +17,20 @@
   padding: 20px 40px;
 }
 
-.bin-row {
+.bin-half-row {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;
+}
+
+.binsContainer {
+  display: flex;
+  padding: 10px;
+  flex-direction: row;
+  width: 1500px;
+  height: 100%;
+  flex-wrap: wrap
 }
 
 .bin-container {
@@ -31,7 +39,6 @@
   align-items: center;
   color: black;
   padding: 12px;
-  margin-right: 5px;
   width: 600px;
 }
 
@@ -88,4 +95,9 @@
 
 .red-bin {
   background-color: #c00000;
+}
+
+.withMarginHorizontal {
+  margin-left: 4px;
+  margin-right: 4px;
 }

@@ -8,6 +8,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import Loading from './Loading';
 
 export interface BinInterface {
   id: string;
@@ -19,6 +20,7 @@ function App() {
   const counterRef = useRef(0);
   const [binText, setBinText] = useState<string>('P-1-F-413B283');
   const [binsData, setBinsData] = useState<BinInterface[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const generateId = () => {
     counterRef.current += 1;
@@ -55,7 +57,13 @@ function App() {
     setBinsData([]);
   };
 
-  const handleDownloadPDF = async (): Promise<void> => {
+  const handleDownloadPDF = async () => {
+    await setIsLoading(true);
+    console.log('loading set to true');
+    await downloadPDF();
+  };
+
+  const downloadPDF = async (): Promise<void> => {
     const original = document.getElementById("binsContainer") as HTMLDivElement | null;
     if (!original) return;
     const clone = original.cloneNode(true) as HTMLDivElement;
@@ -68,26 +76,32 @@ function App() {
         }
       });
     });
-    // Hidden wrapper
+    // Hidden render wrapper
     const wrapper: HTMLDivElement = document.createElement("div");
     wrapper.style.position = "fixed";
     wrapper.style.left = "-9999px";
     wrapper.style.top = "0";
-    wrapper.style.width = "800px";
+    wrapper.style.width = "1500px";
     document.body.appendChild(wrapper);
     wrapper.appendChild(clone);
     const bins: HTMLDivElement[] = Array.from(clone.children).filter(
       (el): el is HTMLDivElement => el instanceof HTMLDivElement
     );
-    const binsPerPage = 10;
+    const rowsPerPage = 16;
+    const columns = 2;
+    const binsPerPage = rowsPerPage * columns;
     const pdf = new jsPDF("p", "mm", "a4");
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
     const margin = 10;
     for (let i = 0; i < bins.length; i += binsPerPage) {
       const pageContainer: HTMLDivElement = document.createElement("div");
-      pageContainer.style.display = "flex";
-      pageContainer.style.flexDirection = "column";
+      // Hard grid layout: 14 rows × 2 columns
+      pageContainer.style.display = "grid";
+      pageContainer.style.gridTemplateColumns = "1fr 1fr";
+      pageContainer.style.rowGap = "8px";
+      pageContainer.style.columnGap = "16px";
+      pageContainer.style.width = "100%";
       bins.slice(i, i + binsPerPage).forEach((bin: HTMLDivElement) => {
         pageContainer.appendChild(bin.cloneNode(true));
       });
@@ -97,14 +111,18 @@ function App() {
         useCORS: true,
       });
       const imgData: string = canvas.toDataURL("image/png");
+      // --- FORCE SCALE TO PAGE HEIGHT (ALL PAGES) ---
       const imgWidthPx = canvas.width;
       const imgHeightPx = canvas.height;
-      // Convert px → mm proportionally
-      const imgWidthMm = pageWidth - margin * 2;
+      const printableWidthMm = pageWidth - margin * 2;
+      const printableHeightMm = pageHeight - margin * 2;
+      // Convert image size to mm assuming width-fit
+      const imgWidthMm = printableWidthMm;
       const imgHeightMm = (imgHeightPx * imgWidthMm) / imgWidthPx;
+      // Compute scale that fits BOTH width and height
       const scale = Math.min(
-        imgWidthMm / imgWidthMm,
-        (pageHeight - margin * 2) / imgHeightMm
+        printableWidthMm / imgWidthMm,
+        printableHeightMm / imgHeightMm
       );
       const finalWidth = imgWidthMm * scale;
       const finalHeight = imgHeightMm * scale;
@@ -120,6 +138,8 @@ function App() {
       wrapper.removeChild(pageContainer);
     }
     pdf.save("bins.pdf");
+    setIsLoading(false);
+    console.log('loading set to false');
     document.body.removeChild(wrapper);
   };
 
@@ -151,42 +171,44 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <div className="outer-container">
-        <div className='input-row'>
-          <InputGroup size="lg">
-            <InputGroup.Text id="inputGroup-sizing-lg">Codici</InputGroup.Text>
-            <Form.Control
-              className='code-input'
-              value={binText}
-              onChange={handleChange}
-              aria-label="Large"
-              aria-describedby="codice"
-            />
-          </InputGroup>
-          <Button size='lg' onClick={handleSubmit}> Genera </Button>
-        </div>
-        <div className='action-btns-row'>
-          {!!binsData?.length && <Button size='lg' variant='danger' onClick={handleDeleteAll} style={{ marginRight: 4 }}> Elimina Tutti </Button>}
-          {!!binsData?.length && <Button size='lg' variant='success' onClick={handleDownloadPDF}> Download PDF </Button>}
-        </div>
-
-        {!!binsData?.length && <div id='binsContainer'>
-          {binsData.map(elem => {
-            return (
-              <div id={elem.id} key={elem.id + ' ' + elem.code} className="bin-row">
-                <div className={elem.classes}>
-                  <QRCode size={100} value={elem.code} />
-                  <div className='bin-text'> {elem.code}  </div>
-                  <QRCode size={100} value={elem.code} />
+    <>
+      {isLoading && <Loading label={"Creazione PDF in corso"} />}
+      <div className="App">
+        <div className="outer-container">
+          <div className='input-row'>
+            <InputGroup size="lg">
+              <InputGroup.Text id="inputGroup-sizing-lg">Codici</InputGroup.Text>
+              <Form.Control
+                className='code-input'
+                value={binText}
+                onChange={handleChange}
+                aria-label="Large"
+                aria-describedby="codice"
+              />
+            </InputGroup>
+            <Button size='lg' onClick={handleSubmit}> Genera </Button>
+          </div>
+          <div className='action-btns-row'>
+            {!!binsData?.length && <Button size='lg' variant='danger' onClick={handleDeleteAll} style={{ marginRight: 4 }}> Elimina Tutti </Button>}
+            {!!binsData?.length && <Button size='lg' variant='success' onClick={handleDownloadPDF}> Download PDF </Button>}
+          </div>
+          {!!binsData?.length && <div id='binsContainer' className="binsContainer">
+            {binsData.map(elem => {
+              return (
+                <div id={elem.id} key={elem.id + ' ' + elem.code} className="bin-half-row">
+                  <div className={elem.classes}>
+                    <QRCode size={100} value={elem.code} />
+                    <div className='bin-text'> {elem.code}  </div>
+                    <QRCode size={100} value={elem.code} />
+                  </div>
+                  <Button size='lg' variant='danger' className="withMarginHorizontal" onClick={() => deleteBin(elem.id)}> Elimina </Button>
                 </div>
-                <Button size='lg' variant='danger' onClick={() => deleteBin(elem.id)}> Elimina </Button>
-              </div>
-            );
-          })}
-        </div>}
+              );
+            })}
+          </div>}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
