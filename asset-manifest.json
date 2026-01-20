@@ -1,15 +1,19 @@
 {
   "files": {
-    "main.css": "/bin-generator/static/css/main.6558b410.css",
-    "main.js": "/bin-generator/static/js/main.c406ef2c.js",
+    "main.css": "/bin-generator/static/css/main.a00203c2.css",
+    "main.js": "/bin-generator/static/js/main.b7bb1430.js",
+    "static/js/511.4bce760b.chunk.js": "/bin-generator/static/js/511.4bce760b.chunk.js",
+    "static/js/598.dd160622.chunk.js": "/bin-generator/static/js/598.dd160622.chunk.js",
     "static/js/787.04d582db.chunk.js": "/bin-generator/static/js/787.04d582db.chunk.js",
     "index.html": "/bin-generator/index.html",
-    "main.6558b410.css.map": "/bin-generator/static/css/main.6558b410.css.map",
-    "main.c406ef2c.js.map": "/bin-generator/static/js/main.c406ef2c.js.map",
+    "main.a00203c2.css.map": "/bin-generator/static/css/main.a00203c2.css.map",
+    "main.b7bb1430.js.map": "/bin-generator/static/js/main.b7bb1430.js.map",
+    "511.4bce760b.chunk.js.map": "/bin-generator/static/js/511.4bce760b.chunk.js.map",
+    "598.dd160622.chunk.js.map": "/bin-generator/static/js/598.dd160622.chunk.js.map",
     "787.04d582db.chunk.js.map": "/bin-generator/static/js/787.04d582db.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.6558b410.css",
-    "static/js/main.c406ef2c.js"
+    "static/css/main.a00203c2.css",
+    "static/js/main.b7bb1430.js"
   ]
 }
