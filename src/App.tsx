@@ -66,7 +66,7 @@ function App() {
     const original = document.getElementById("binsContainer") as HTMLDivElement | null;
     if (!original) return;
     const clone = original.cloneNode(true) as HTMLDivElement;
-    // Remove delete buttons
+    // Removing delete buttons
     Array.from(clone.children).forEach((binRow: Element) => {
       if (!(binRow instanceof HTMLDivElement)) return;
       Array.from(binRow.children).forEach((child: Element) => {
@@ -75,7 +75,6 @@ function App() {
         }
       });
     });
-    // Hidden render wrapper
     const wrapper: HTMLDivElement = document.createElement("div");
     wrapper.style.position = "fixed";
     wrapper.style.left = "-9999px";
@@ -110,29 +109,36 @@ function App() {
         useCORS: true,
       });
       const imgData: string = canvas.toDataURL("image/png");
-      // --- FORCE SCALE TO PAGE HEIGHT (ALL PAGES) ---
       const imgWidthPx = canvas.width;
       const imgHeightPx = canvas.height;
       const printableWidthMm = pageWidth - margin * 2;
       const printableHeightMm = pageHeight - margin * 2;
-      // Convert image size to mm assuming width-fit
-      const imgWidthMm = printableWidthMm;
-      const imgHeightMm = (imgHeightPx * imgWidthMm) / imgWidthPx;
-      // Compute scale that fits BOTH width and height
-      // const scale = Math.min(
-      //   printableWidthMm / imgWidthMm,
-      //   printableHeightMm / imgHeightMm
-      // );
-      // const scaledImgWidth = imgWidthMm * scale;
-      // const scaledImgHeight = imgHeightMm * scale;
+      // ------------ RESIZING START ------------
+      // Convert canvas px → mm using jsPDF's internal scale
+      const pxToMm = (px: number) =>
+        (px * printableWidthMm) / imgWidthPx;
+      // Natural image size in mm
+      const naturalWidthMm = pxToMm(imgWidthPx);
+      const naturalHeightMm = pxToMm(imgHeightPx);
+      // Scale factor to ensure BOTH width and height fit
+      const scale = Math.min(
+        printableWidthMm / naturalWidthMm,
+        printableHeightMm / naturalHeightMm,
+        1 // never upscale
+      );
+      // Apply a small safety margin to avoid rounding overflow
+      // ------------ RESIZING END ------------
+      const SAFETY = 0.985;
+      const finalWidthMm = naturalWidthMm * scale * SAFETY;
+      const finalHeightMm = naturalHeightMm * scale * SAFETY;
       if (i !== 0) pdf.addPage();
       pdf.addImage(
         imgData,
         "PNG",
         margin,
         margin,
-        imgWidthMm,
-        imgHeightMm
+        finalWidthMm,
+        finalHeightMm
       );
       wrapper.removeChild(pageContainer);
     }
