@@ -59,7 +59,6 @@ function App() {
 
   const handleDownloadPDF = async () => {
     await setIsLoading(true);
-    console.log('loading set to true');
     await downloadPDF();
   };
 
@@ -139,7 +138,6 @@ function App() {
     }
     pdf.save("bins.pdf");
     setIsLoading(false);
-    console.log('loading set to false');
     document.body.removeChild(wrapper);
   };
 
