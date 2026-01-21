@@ -28,7 +28,7 @@ function App() {
   };
 
   const getColorClass = (letter: string): string => {
-    const upperCasedLetter = letter?.toUpperCase() ?? 'A';
+    const upperCasedLetter = letter?.toUpperCase();
     switch (upperCasedLetter) {
       case 'A': return 'green-bin';
       case 'B': return 'purple-bin';
@@ -95,11 +95,11 @@ function App() {
     const margin = 10;
     for (let i = 0; i < bins.length; i += binsPerPage) {
       const pageContainer: HTMLDivElement = document.createElement("div");
-      // Hard grid layout: 14 rows × 2 columns
+      // Hard grid layout: 16 rows × 2 columns
       pageContainer.style.display = "grid";
       pageContainer.style.gridTemplateColumns = "1fr 1fr";
-      pageContainer.style.rowGap = "8px";
-      pageContainer.style.columnGap = "16px";
+      pageContainer.style.rowGap = "5px";
+      pageContainer.style.columnGap = "10px";
       pageContainer.style.width = "100%";
       bins.slice(i, i + binsPerPage).forEach((bin: HTMLDivElement) => {
         pageContainer.appendChild(bin.cloneNode(true));
@@ -119,20 +119,20 @@ function App() {
       const imgWidthMm = printableWidthMm;
       const imgHeightMm = (imgHeightPx * imgWidthMm) / imgWidthPx;
       // Compute scale that fits BOTH width and height
-      const scale = Math.min(
-        printableWidthMm / imgWidthMm,
-        printableHeightMm / imgHeightMm
-      );
-      const finalWidth = imgWidthMm * scale;
-      const finalHeight = imgHeightMm * scale;
+      // const scale = Math.min(
+      //   printableWidthMm / imgWidthMm,
+      //   printableHeightMm / imgHeightMm
+      // );
+      // const scaledImgWidth = imgWidthMm * scale;
+      // const scaledImgHeight = imgHeightMm * scale;
       if (i !== 0) pdf.addPage();
       pdf.addImage(
         imgData,
         "PNG",
         margin,
         margin,
-        finalWidth,
-        finalHeight
+        imgWidthMm,
+        imgHeightMm
       );
       wrapper.removeChild(pageContainer);
     }
@@ -155,6 +155,7 @@ function App() {
     }
     codeFragments.forEach(frag => {
       const targetLetter = frag[frag.length - 4];
+      console.log('targetLetter:', targetLetter);
       const colorClass = getColorClass(targetLetter);
       const binClasses = 'bin-container ' + colorClass;
       const binId = generateId();
